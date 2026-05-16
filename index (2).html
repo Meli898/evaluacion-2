@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMIÈRE — Salón de Belleza</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ══════════════ LOGIN SCREEN ══════════════ -->
+  <div id="screen-login" class="screen active">
+    <div class="login-bg">
+      <div class="login-orb orb1"></div>
+      <div class="login-orb orb2"></div>
+    </div>
+    <div class="login-card">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <h1 class="brand-name">LUMIÈRE</h1>
+        <p class="brand-sub">Salón de Belleza & Spa</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="field-group" id="fg-email">
+          <label for="login-email">Correo electrónico</label>
+          <input type="email" id="login-email" autocomplete="email" placeholder="hola@ejemplo.com" />
+          <span class="field-error" id="err-email"></span>
+        </div>
+
+        <div class="field-group" id="fg-password">
+          <label for="login-password">Contraseña</label>
+          <div class="pass-wrap">
+            <input type="password" id="login-password" autocomplete="current-password" placeholder="••••••••" />
+            <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Mostrar contraseña">👁</button>
+          </div>
+          <span class="field-error" id="err-password"></span>
+        </div>
+
+        <span class="field-error center" id="err-general"></span>
+
+        <button type="submit" class="btn-primary" id="btn-login">
+          <span class="btn-text">Ingresar</span>
+          <span class="btn-loader hidden">↻</span>
+        </button>
+      </form>
+
+      <p class="login-hint">
+        Demo: <strong>admin@lumiere.cl</strong> / <strong>Admin123!</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════ DASHBOARD ══════════════ -->
+  <div id="screen-dashboard" class="screen">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon small">✦</span>
+        <span class="brand-name small">LUMIÈRE</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="reservas">
+          <span class="nav-icon">📅</span><span>Reservas</span>
+        </button>
+        <button class="nav-item" data-view="nueva">
+          <span class="nav-icon">✚</span><span>Nueva Reserva</span>
+        </button>
+        <button class="nav-item" data-view="servicios">
+          <span class="nav-icon">💆</span><span>Servicios</span>
+        </button>
+        <button class="nav-item" data-view="clientes">
+          <span class="nav-icon">👤</span><span>Clientes</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-pill">
+          <span class="user-avatar" id="user-avatar">A</span>
+          <span class="user-name" id="user-name-display">Admin</span>
+        </div>
+        <button class="btn-logout" id="btn-logout">Salir</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="top-bar">
+        <div>
+          <h2 class="view-title" id="view-title">Reservas</h2>
+          <p class="view-subtitle" id="view-subtitle">Gestiona todas las citas del salón</p>
+        </div>
+        <div class="top-bar-actions">
+          <input type="search" id="global-search" class="search-box" placeholder="Buscar reserva, cliente…" />
+        </div>
+      </header>
+
+      <!-- ── VIEW: RESERVAS ── -->
+      <section class="view active" id="view-reservas">
+        <div class="stats-row">
+          <div class="stat-card">
+            <span class="stat-value" id="stat-total">0</span>
+            <span class="stat-label">Total Reservas</span>
+          </div>
+          <div class="stat-card accent">
+            <span class="stat-value" id="stat-hoy">0</span>
+            <span class="stat-label">Hoy</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-pendientes">0</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-completadas">0</span>
+            <span class="stat-label">Completadas</span>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <select id="filter-status" class="filter-select">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="completada">Completada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+          <select id="filter-servicio" class="filter-select">
+            <option value="">Todos los servicios</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table" id="tabla-reservas">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Servicio</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-reservas"></tbody>
+          </table>
+          <p class="empty-msg hidden" id="empty-reservas">No hay reservas que mostrar.</p>
+        </div>
+      </section>
+
+      <!-- ── VIEW: NUEVA RESERVA ── -->
+      <section class="view" id="view-nueva">
+        <div class="form-card">
+          <h3 class="form-title">Nueva Reserva</h3>
+          <form id="form-reserva" novalidate>
+
+            <div class="form-grid">
+              <div class="field-group" id="fg-nombre">
+                <label for="r-nombre">Nombre del cliente *</label>
+                <input type="text" id="r-nombre" placeholder="Ej: María González" maxlength="60" />
+                <span class="field-error" id="err-r-nombre"></span>
+              </div>
+
+              <div class="field-group" id="fg-r-email">
+                <label for="r-email">Correo electrónico *</label>
+                <input type="email" id="r-email" placeholder="cliente@email.com" maxlength="80" />
+                <span class="field-error" id="err-r-email"></span>
+              </div>
+
+              <div class="field-group" id="fg-telefono">
+                <label for="r-telefono">Teléfono</label>
+                <input type="tel" id="r-telefono" placeholder="+56 9 1234 5678" maxlength="15" />
+                <span class="field-error" id="err-r-telefono"></span>
+              </div>
+
+              <div class="field-group" id="fg-servicio">
+                <label for="r-servicio">Servicio *</label>
+                <select id="r-servicio">
+                  <option value="">Selecciona un servicio</option>
+                </select>
+                <span class="field-error" id="err-r-servicio"></span>
+              </div>
+
+              <div class="field-group" id="fg-fecha">
+                <label for="r-fecha">Fecha *</label>
+                <input type="date" id="r-fecha" />
+                <span class="field-error" id="err-r-fecha"></span>
+              </div>
+
+              <div class="field-group" id="fg-hora">
+                <label for="r-hora">Hora *</label>
+                <select id="r-hora">
+                  <option value="">Selecciona hora</option>
+                </select>
+                <span class="field-error" id="err-r-hora"></span>
+              </div>
+
+              <div class="field-group full" id="fg-notas">
+                <label for="r-notas">Notas adicionales</label>
+                <textarea id="r-notas" rows="3" placeholder="Preferencias, alergias, etc." maxlength="300"></textarea>
+                <span class="char-count" id="char-notas">0/300</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="reset" class="btn-secondary">Limpiar</button>
+              <button type="submit" class="btn-primary">Guardar Reserva</button>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+      <!-- ── VIEW: SERVICIOS ── -->
+      <section class="view" id="view-servicios">
+        <div class="services-grid" id="services-grid"></div>
+      </section>
+
+      <!-- ── VIEW: CLIENTES ── -->
+      <section class="view" id="view-clientes">
+        <div class="table-wrap">
+          <table class="data-table" id="tabla-clientes">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Reservas</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-clientes"></tbody>
+          </table>
+          <p class="empty-msg hidden" id="empty-clientes">No hay clientes registrados.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ══════════════ MODAL ══════════════ -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
